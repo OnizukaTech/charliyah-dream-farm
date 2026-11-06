@@ -143,7 +143,7 @@
           <div class="tabs-inline"><button class="chip ${room === 'inside' ? 'on' : ''}" data-room="inside">🛏 Bedroom</button><button class="chip ${room === 'yard' ? 'on' : ''}" data-room="yard">🌷 Front Garden</button></div></div>
         <div class="mode-switch" role="group" aria-label="Decorating mode">
           <button class="seg ${dream ? '' : 'on'}" data-dream="0" aria-pressed="${!dream}">🏡 My Real Home</button>
-          <button class="seg ${dream ? 'on' : ''}" data-dream="1" aria-pressed="${dream}">✨ Dream Home (free creative mode)</button>
+          <button class="seg ${dream ? 'on' : ''}" data-dream="1" aria-pressed="${dream}">✨ Dream Home <span class="seg-long">(free creative mode)</span></button>
         </div>
         <p class="lead small-t">${dream ? 'Everything is free here — decorate however you like! This is a separate dream space, so your real home stays just as it is.' : sel ? (sel.move != null ? 'Tap a glowing spot to move it. ' : 'Tap a glowing spot to place it. ') + '<button class="link-btn" data-cancel>Cancel</button>' : 'Pick a decoration below, then tap a glowing spot in the room. Tap anything you’ve placed to move it or put it away.'}</p>
         ${roomHTML()}

@@ -124,7 +124,7 @@ svg { display: block; }
 .create-btns { display: flex; justify-content: space-between; gap: 12px; margin-top: 18px; }
 .name-field { margin-top: 14px; }
 
-.av-editor { display: grid; grid-template-columns: minmax(150px, 230px) 1fr; gap: 16px; background: var(--card); border-radius: var(--r-lg); padding: 16px; box-shadow: var(--shadow); }
+.av-editor { display: grid; grid-template-columns: minmax(150px, 230px) minmax(0, 1fr); gap: 16px; background: var(--card); border-radius: var(--r-lg); padding: 16px; box-shadow: var(--shadow); }
 .av-preview { background: radial-gradient(circle at 50% 70%, #fde6e1, #e3f2dc 70%); border-radius: var(--r-md); display: flex; align-items: flex-end; justify-content: center; padding: 10px; min-height: 220px; }
 .av-preview .avatar-svg { width: 100%; max-width: 200px; }
 .av-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; max-height: 330px; overflow-y: auto; padding: 4px; }
@@ -355,6 +355,7 @@ h3.sub { font-size: 1.05rem; margin: 1em 0 .5em; color: #5a3f55; }
 .mode-switch { display: inline-flex; background: #fff; border-radius: 999px; padding: 4px; box-shadow: var(--shadow-s); margin-bottom: 8px; flex-wrap: wrap; }
 .seg { border: 0; background: none; border-radius: 999px; min-height: 44px; padding: 0 14px; font-weight: 600; color: var(--ink-soft); }
 .seg.on { background: var(--lav-l); color: var(--ink); }
+.seg .seg-long { font-weight: 500; font-size: .85em; }
 .house-page.dream { background: radial-gradient(circle at 20% 0, #f6e6ff, transparent 50%), radial-gradient(circle at 90% 10%, #e1f3ff, transparent 40%); border-radius: var(--r-lg); }
 .room { position: relative; border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow); border: 6px solid #fff; max-width: 760px; margin: 0 auto; }
 .room-inside { background: linear-gradient(var(--wall) 0 calc(100% / var(--rows)), var(--floor) calc(100% / var(--rows))); }
@@ -678,7 +679,8 @@ h3.sub { font-size: 1.05rem; margin: 1em 0 .5em; color: #5a3f55; }
 .settings { display: flex; flex-direction: column; gap: 12px; }
 .settings hr { border: 0; border-top: 2px dashed var(--line); width: 100%; }
 .toggle { display: flex; align-items: center; gap: 10px; min-height: 48px; font-weight: 600; }
-.toggle input { width: 26px; height: 26px; accent-color: var(--sage-d); }
+.toggle input { width: 26px; height: 26px; flex: none; accent-color: var(--sage-d); }
+.toggle { cursor: pointer; }
 
 /* quests */
 .quest-list { display: flex; flex-direction: column; gap: 10px; }
@@ -775,6 +777,54 @@ body:has(.game-overlay):not(:has(.modal-wrap)) #toasts { top: calc(78px + env(sa
   #cloverPop { bottom: calc(76px + var(--safe-b)); }
   .clover-pop-art { width: 70px; }
   .modal { padding: 18px 14px 14px; }
+  /* --- compact header so the game gets more room --- */
+  #hud { gap: 4px 6px; padding: 4px 8px; padding-top: max(4px, env(safe-area-inset-top)); }
+  .hud-avatar { width: 40px; height: 40px; border-width: 2px; }
+  .hud-avatar svg { width: 52px; margin: -2px 0 0 -8px; }
+  .hud-me { min-height: 44px; }
+  .hud-coins { font-size: 1rem; }
+  .hud-coins svg { width: 24px; height: 24px; }
+  .hud-time { min-height: 40px; }
+  .hud-time svg { width: 28px; height: 28px; }
+  .hud-btn { min-height: 44px; min-width: 44px; }
+  .hud-btn svg { width: 28px; height: 28px; }
+  /* --- avatar editor / wardrobe --- */
+  .av-editor { grid-template-columns: minmax(0, 1fr); padding: 10px; gap: 10px; }
+  .av-preview { min-height: 0; height: 150px; }
+  .av-preview .avatar-svg { width: auto; height: 100%; max-width: none; }
+  .av-options { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); max-height: 260px; }
+  .av-opt { min-height: 108px; }
+  .av-opt-art { width: 58px; height: 72px; }
+  .av-options.swatches { grid-template-columns: repeat(auto-fill, 56px); justify-content: center; }
+  .create-wrap { padding: 12px 12px 24px; }
+  .create-head .clover { width: 72px; }
+  .create-head .bubble { font-size: .92rem; }
+  .field.inline input { max-width: none; }
+  /* --- misc crowding --- */
+  .journal-cover::after { display: none; }
+  .journal-cover { padding: 12px; gap: 10px; }
+  .jc-avatar { width: 64px; height: 72px; }
+  .jc-avatar svg { width: 80px; }
+  .mode-switch { display: flex; width: 100%; flex-wrap: nowrap; }
+  .seg { flex: 1; padding: 0 8px; font-size: .9rem; }
+  .seg .seg-long { display: none; }
+  .game-top { padding: 8px 10px; padding-top: max(8px, env(safe-area-inset-top)); gap: 8px; }
+  .game-top h2 { font-size: 1.02rem; line-height: 1.15; }
+  .game-prog { font-size: .78rem; max-width: 34%; }
+  .game-body { padding: 12px; }
+  .page { padding: 12px 12px 32px; }
+  .tool-row .btn { flex: 1 1 auto; }
+  .treehouse-hero .bubble { font-size: .92rem; }
+  .th-clover { width: 76px; }
+  .market-banner p { font-size: 1.05rem; }
+  .title-clover .tc-btn { width: 84px; }
+  .title-clover .bubble { font-size: .84rem; max-width: 230px; padding: .6em .8em; }
+  .t-sub { font-size: 1.15rem; }
+}
+@media (max-width: 640px) and (max-height: 700px) {
+  .title-clover .bubble { display: none; }
+  .farm-strip { padding: 6px 8px; }
+  .strip-card { min-height: 60px; padding: 4px 8px; min-width: 100px; }
 }
 @media (max-height: 560px) and (orientation: landscape) {
   .farm-strip { display: none; }
