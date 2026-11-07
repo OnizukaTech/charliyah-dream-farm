@@ -106,12 +106,14 @@
     draw(msg) {
       const body = frame.body;
       const left = this.flowers.filter(f => !f.open).length;
+      const waiting = this.waitingKinds();
+      const needHint = !this.carry || !waiting.includes(this.carry);
       G.prog(`Round ${this.round}/3 · ${left} bud${left === 1 ? '' : 's'} left`);
       body.innerHTML = `<div class="bee-game">
         <div class="bee-msg" aria-live="polite">${msg || ''}</div>
         <div class="bee-carry">Bumble is carrying: <b>${this.carry ? `<span class="pollen-dot" style="--c:${FL_COL[this.carry]}"></span>${DF.CROPS[this.carry].name} pollen` : 'nothing yet'}</b></div>
         <div class="bee-board cols-${Math.min(4, this.flowers.length / 3 + (this.round > 1 ? 1 : 1))}">
-          ${this.flowers.map((f, i) => `<button class="bee-flower ${f.open ? 'open' : 'bud'}" data-f="${i}" aria-label="${DF.CROPS[f.k].name} ${f.open ? 'flower with pollen' : 'bud waiting for pollen'}">
+          ${this.flowers.map((f, i) => `<button class="bee-flower ${f.open ? 'open' : 'bud'} ${f.open && needHint && waiting.includes(f.k) ? 'needed' : ''} ${!f.open && this.carry === f.k ? 'needed' : ''}" data-f="${i}" aria-label="${DF.CROPS[f.k].name} ${f.open ? 'flower with pollen' : 'bud waiting for pollen'}">
             ${f.open ? A.icon(f.k) : `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 92 L50 50" stroke="#5aa94b" stroke-width="5"/><path d="M50 66 C40 60 34 52 36 46 C44 50 48 56 50 64Z" fill="#6cb85a"/><path d="M36 50 C36 26 64 26 64 50 Q50 58 36 50Z" fill="#9bd18a" stroke="#5aa94b" stroke-width="2.5"/><path d="M42 34 Q50 22 58 34 Q50 30 42 34Z" fill="${FL_COL[f.k]}" stroke="#ccc" stroke-width="1"/></svg>`}
             <span class="fl-name">${DF.CROPS[f.k].name}${f.open ? '' : ' bud'}</span></button>`).join('')}
           <div class="bee-sprite" aria-hidden="true">${A.bee(this.carry ? FL_COL[this.carry] : null)}</div>
@@ -127,6 +129,8 @@
       sp.style.transform = `translate(${fr.left - br.left + fr.width / 2 - 30}px, ${fr.top - br.top - 10}px)`;
       if (instant) { void sp.offsetWidth; sp.style.transition = ''; }
     },
+    waitingKinds() { return Array.from(new Set(this.flowers.filter(x => !x.open).map(x => x.k))); },
+    nameList(kinds) { const n = kinds.map(k => '<b>' + DF.CROPS[k].name.toLowerCase() + '</b>'); return n.length > 1 ? n.slice(0, -1).join(', ') + ' or ' + n[n.length - 1] : n[0]; },
     tap(i) {
       const f = this.flowers[i];
       this.moveBee(i);
@@ -135,6 +139,11 @@
       setTimeout(() => {
         if (f.open) {
           this.carry = f.k;
+          const waiting = this.waitingKinds();
+          if (!waiting.includes(f.k)) {
+            this.draw(`🐝 Bumble collected ${DF.CROPS[f.k].name.toLowerCase()} pollen — but every ${DF.CROPS[f.k].name.toLowerCase()} has already bloomed! Tap an open ${this.nameList(waiting)} to collect the pollen those buds need.`);
+            return;
+          }
           this.draw(`🐝 Bumble collected <b>${DF.CROPS[f.k].name.toLowerCase()} pollen</b>. Now find a ${DF.CROPS[f.k].name.toLowerCase()} bud!`);
           return;
         }
@@ -142,7 +151,7 @@
         if (this.carry !== f.k) {
           this.mistakes++;
           DF.Audio.play('wrong');
-          this.draw(`Oops! That's a <b>${DF.CROPS[f.k].name.toLowerCase()}</b> bud, but Bumble has ${DF.CROPS[this.carry].name.toLowerCase()} pollen. Pollen only works on the <b>same kind</b> of flower. 💛`);
+          this.draw(`Oops! That's a <b>${DF.CROPS[f.k].name.toLowerCase()}</b> bud, but Bumble has ${DF.CROPS[this.carry].name.toLowerCase()} pollen. Pollen only works on the <b>same kind</b> of flower — tap an open <b>${DF.CROPS[f.k].name.toLowerCase()}</b> first! 💛`);
           return;
         }
         f.open = true;
@@ -159,7 +168,8 @@
           }
           return;
         }
-        this.draw(`✨ Pollinated! The ${DF.CROPS[f.k].name.toLowerCase()} bloomed. ${left} bud${left > 1 ? 's' : ''} to go.`);
+        const stillSame = this.flowers.some(x => !x.open && x.k === f.k);
+        this.draw(`✨ Pollinated! The ${DF.CROPS[f.k].name.toLowerCase()} bloomed. ${left} bud${left > 1 ? 's' : ''} to go.${stillSame ? '' : ` All the ${DF.CROPS[f.k].name.toLowerCase()}s are done — now tap an open ${this.nameList(this.waitingKinds())} to collect new pollen!`}`);
       }, UI.reducedMotion() ? 0 : 420);
     }
   };

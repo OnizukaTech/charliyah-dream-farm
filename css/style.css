@@ -550,6 +550,7 @@ h3.sub { font-size: 1.05rem; margin: 1em 0 .5em; color: #5a3f55; }
 .bee-flower svg { width: 76px; height: 76px; }
 .bee-flower.open { border-color: #ffe27a; background: rgba(255, 255, 255, .75); }
 .bee-flower.open svg { animation: bloom .5s ease; }
+.bee-flower.needed { border-color: #f0b429; box-shadow: 0 0 0 4px rgba(255, 211, 77, .45); animation: pulse 1.6s ease-in-out infinite; }
 .fl-name { font-size: .8rem; font-weight: 600; }
 .bee-sprite { position: absolute; left: 0; top: 0; width: 60px; height: 48px; transition: transform .42s cubic-bezier(.4, 1.4, .6, 1); pointer-events: none; z-index: 3; transform: translate(12px, 0); }
 .bee-sprite svg { width: 100%; height: 100%; animation: bob .8s ease-in-out infinite; }
